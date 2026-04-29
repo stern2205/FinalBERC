@@ -1029,8 +1029,8 @@ document.addEventListener('alpine:init', () => {
         getDaysAllowed(classification) {
             const classf = classification || 'Full Board';
             if (classf === 'Expedited') return 10;
-            if (classf === 'Full Board') return 21;
-            return 21;
+            if (classf === 'Full Board') return 20;
+            return 0;
         },
 
         getReviewDeadlineMs(protocol, reviewer) {
