@@ -1033,7 +1033,7 @@
                 };
 
                 try {
-                    const response = await fetch(`/documents/api/${protocolId}`);
+                    const response = await fetch(`{{ url('/documents/api') }}/${protocolId}`);
                     if (response.ok) {
                         const data = await response.json();
                         let tempDocs = { activeBasic: [], activeSupp: [], legacy: [] };
@@ -1129,7 +1129,7 @@
                 this.isSavingDecision = true;
 
                 try {
-                    const response = await fetch('/chair/decision-letter/save', {
+                    const response = await fetch("{{ url('/chair/decision-letter/save') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1195,7 +1195,7 @@
                 }
 
                 try {
-                    const response = await fetch('/chair/protocol/finalize', {
+                    const response = await fetch("{{ url('/chair/protocol/finalize') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1279,7 +1279,7 @@
             },
             async executeAssignConsultant() {
                 try {
-                    const response = await fetch('{{ route('chair.consultant.assign') }}', {
+                    const response = await fetch("{{ route('chair.consultant.assign') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1360,7 +1360,7 @@ document.addEventListener('alpine:initialized', () => {
     }
 
     function runChairApprovalTutorial(manual = false) {
-        const userId = @json(auth()->id());
+        const userId = @json($user->id);
         const storageKey = 'berc_tutorial_step_' + userId;
 
         if (manual) {
@@ -1491,8 +1491,8 @@ document.addEventListener('alpine:initialized', () => {
     };
 
     loadDriverThenRun(() => {
-        const isFirstLogin = @json(auth()->user()->is_first_login);
-        const userId = @json(auth()->id());
+        const isFirstLogin = @json($user->is_first_login);
+        const userId = @json($user->id);
         const storageKey = 'berc_tutorial_step_' + userId;
         const tourState = localStorage.getItem(storageKey);
 

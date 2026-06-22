@@ -241,7 +241,7 @@
                                             <th class="px-4 py-4 w-16">Item #</th>
                                             <th class="px-4 py-4 min-w-[250px]">Criteria / Question</th>
                                             <th class="px-4 py-4 w-24 text-center">Remark</th>
-                                            <th class="px-4 py-4 w-28 text-center">Line/Pg</th>
+                                            <th class="px-4 py-4 w-28 text-center">Pg/Line</th>
 
                                             <th id="tour-comment-column" class="px-4 py-4 border-l border-gray-200 min-w-[300px]">Your Comments</th>
                                         </tr>
@@ -547,7 +547,7 @@ document.addEventListener('alpine:init', () => {
             }
 
             try {
-                const draftRes = await fetch(`/reviewer/assessment/${protocol.protocol_code}/draft`);
+                const draftRes = await fetch(`{{ url('/reviewer/assessment') }}/${protocol.protocol_code}/draft`);
                 if (draftRes.ok) {
                     const draftData = await draftRes.json();
                     if (draftData && draftData.assessment_rows) {
@@ -590,7 +590,7 @@ document.addEventListener('alpine:init', () => {
             this.loadedDocs = { activeBasic: [], activeSupp: [], legacy: [] };
 
             try {
-                const response = await fetch(`/documents/api/${protocol.protocol_code}`);
+                const response = await fetch(`{{ url('/documents/api') }}/${protocol.protocol_code}`);
                 if (response.ok) {
                     const data = await response.json();
                     let tempDocs = { activeBasic: [], activeSupp: [], legacy: [] };
@@ -689,7 +689,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/reviewer/assessment/${protocolId}/draft`, {
+                const response = await fetch(`{{ url('/reviewer/assessment') }}/${protocolId}/draft`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -763,7 +763,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/reviewer/assessment/${protocolId}/validate`, {
+                const response = await fetch(`{{ url('/reviewer/assessment') }}/${protocolId}/validate`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -822,8 +822,8 @@ document.addEventListener('alpine:initialized', () => {
     }
 
     function runReviewerAssessmentTutorial(manual = false) {
-        const isFirstLogin = @json(auth()->user()->is_first_login);
-        const userId = @json(auth()->id());
+        const isFirstLogin = @json($user->is_first_login);
+        const userId = @json($user->id);
         const storageKey = 'berc_tutorial_step_' + userId;
 
         if (manual) {

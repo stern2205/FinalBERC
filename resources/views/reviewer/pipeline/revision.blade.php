@@ -348,9 +348,20 @@
 
                     <div class="flex gap-3">
                         <button @click="closeModal()" class="px-6 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-800 transition-colors border border-gray-200 hover:bg-gray-100 bg-white cursor-pointer">Close</button>
-                        <button x-show="activeTab === 'validate'" @click="submitValidation()" class="bg-brand-red text-white px-8 py-2.5 rounded-lg text-[11px] font-black shadow-md hover:shadow-lg hover:bg-red-700 transition-all uppercase tracking-widest border-none cursor-pointer flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                            Confirm Validation
+                        <button x-show="activeTab === 'validate'"
+                                @click="submitValidation()"
+                                :disabled="hasMissingAction"
+                                :title="hasMissingAction ? `Select an action for ${missingActionCount} item(s) first.` : 'Confirm validation'"
+                                :class="hasMissingAction
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
+                                    : 'bg-brand-red text-white hover:bg-red-700 hover:shadow-lg cursor-pointer'"
+                                class="px-8 py-2.5 rounded-lg text-[11px] font-black shadow-md transition-all uppercase tracking-widest border-none flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                            </svg>
+
+                            <span x-show="!hasMissingAction">Confirm Validation</span>
+                            <span x-show="hasMissingAction" x-text="`Select Action First (${missingActionCount})`"></span>
                         </button>
                     </div>
                 </div>
@@ -629,7 +640,7 @@ document.addEventListener('alpine:init', () => {
 
             if (this.activeTab === 'validate') {
                 try {
-                    const draftRes = await fetch(`/reviewer/assessment/${protocol.id}/v${revNum}/draft`);
+                    const draftRes = await fetch(`{{ url('/reviewer/assessment') }}/${protocol.id}/v${revNum}/draft`);
                     if (draftRes.ok) {
                         const draftData = await draftRes.json();
 
@@ -663,7 +674,7 @@ document.addEventListener('alpine:init', () => {
             this.loadedDocs = { activeBasic: [], activeSupp: [], legacy: [] };
 
             try {
-                const docResponse = await fetch(`/documents/api/revision/${protocol.id}/${revNum}`);
+                const docResponse = await fetch(`{{ url('/documents/api/revision') }}/${protocol.id}/${revNum}`);
                 if (docResponse.ok) {
                     const data = await docResponse.json();
                     let tempDocs = { activeBasic: [], activeSupp: [], legacy: [] };
@@ -741,7 +752,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/reviewer/assessment/${protocolId}/v${revNum}/draft`, {
+                const response = await fetch(`{{ url('/reviewer/assessment') }}/${protocolId}/v${revNum}/draft`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -797,6 +808,14 @@ document.addEventListener('alpine:init', () => {
             return missing;
         },
 
+        get hasMissingAction() {
+            return (this.protocolRows || []).some(row => !row.action);
+        },
+
+        get missingActionCount() {
+            return (this.protocolRows || []).filter(row => !row.action).length;
+        },
+
         openSubmitConfirmation() {
             this.missingInputItems = this.getMissingInputItems();
             this.confirmSubmitOpen = true;
@@ -812,6 +831,14 @@ document.addEventListener('alpine:init', () => {
         },
 
         submitValidation() {
+            if (this.hasMissingAction) {
+                this.showNotification(
+                    'Missing Action',
+                    `Please select an action for ${this.missingActionCount} item(s) before confirming.`
+                );
+                return;
+            }
+
             this.openSubmitConfirmation();
         },
 
@@ -824,7 +851,7 @@ document.addEventListener('alpine:init', () => {
             }
 
             try {
-                const response = await fetch('/reviewer/validate-revisions', {
+                const response = await fetch("{{ url('/reviewer/validate-revisions') }}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -890,8 +917,8 @@ document.addEventListener('alpine:initialized', () => {
     }
 
     function runReviewerResubmissionsTutorial(manual = false) {
-        const isFirstLogin = @json(auth()->user()->is_first_login);
-        const userId = @json(auth()->id());
+        const isFirstLogin = @json($user->is_first_login);
+        const userId = @json($user->id);
         const storageKey = 'berc_tutorial_step_' + userId;
 
         if (manual) {

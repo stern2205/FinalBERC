@@ -1428,7 +1428,7 @@ document.addEventListener('alpine:init', () => {
             this.docGroups = {}; // Used to power the green checkmarks
 
             try {
-                const response = await fetch(`/secretariat/applications/${protocol.id}`);
+                const response = await fetch(`{{ url('/secretariat/applications') }}/${protocol.id}`);
                 if (response.ok) {
                     const data = await response.json();
 
@@ -2067,7 +2067,7 @@ document.addEventListener('alpine:init', () => {
                 };
 
                 try {
-                    const response = await fetch(`/research/status/${this.selectedProtocol.id}`, {
+                    const response = await fetch(`{{ url('/research/status') }}/${this.selectedProtocol.id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -2192,7 +2192,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/research/status/${this.selectedProtocol.id}`, {
+                const response = await fetch(`{{ url('/research/status') }}/${this.selectedProtocol.id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2269,8 +2269,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function runProtocolEvaluationTutorial(manual = false, retries = 0) {
-        const userId = @json(auth()->id());
-        const isFirstLogin = @json(auth()->user()->is_first_login);
+        const userId = @json($user->id);
+        const isFirstLogin = @json($user->is_first_login);
         const storageKey = 'berc_tutorial_step_' + userId;
         const tourState = localStorage.getItem(storageKey);
 

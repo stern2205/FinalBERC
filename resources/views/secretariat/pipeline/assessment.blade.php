@@ -813,7 +813,7 @@ document.addEventListener('alpine:init', () => {
             this.ensureConsentRows(protocol);
 
             try {
-                const draftRes = await fetch(`/api/secretariat/synthesis/${protocol.id}/draft`);
+                const draftRes = await fetch(`{{ url('/api/secretariat/synthesis') }}/${protocol.id}/draft`);
                 if (draftRes.ok) {
                     const draftData = await draftRes.json();
 
@@ -894,7 +894,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/documents/api/${protocolId}`);
+                const response = await fetch(`{{ url('/documents/api') }}/${protocolId}`);
                 if (response.ok) {
                     const data = await response.json();
                     let tempDocs = { activeBasic: [], activeSupp: [], legacy: [] };
@@ -1167,7 +1167,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/api/secretariat/synthesis/${protocolId}/draft`, {
+                const response = await fetch(`{{ url('/api/secretariat/synthesis') }}/${protocolId}/draft`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1267,7 +1267,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch('/api/secretariat/synthesis/save', {
+                const response = await fetch('{{ url("/api/secretariat/synthesis/save") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1331,8 +1331,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function runAssessmentTutorial(manual = false, retries = 0) {
-        const isFirstLogin = @json(auth()->check() ? auth()->user()->is_first_login : true);
-        const userId = @json(auth()->id() ?? 1);
+        const isFirstLogin = @json($user->is_first_login);
+        const userId = @json($user->id);
         const storageKey = 'berc_tutorial_step_' + userId;
 
         const urlParams = new URLSearchParams(window.location.search);

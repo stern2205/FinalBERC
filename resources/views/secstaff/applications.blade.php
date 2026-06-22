@@ -946,7 +946,7 @@
     // ==========================================
     async function openModal(protocolCode) {
         try {
-            const response = await fetch(`/secstaff/applications/${protocolCode}`);
+            const response = await fetch(`{{ url('/secstaff/applications') }}/${protocolCode}`);
             if (!response.ok) throw new Error('Fetch failed');
             const data = await response.json();
 
@@ -1294,7 +1294,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const response = await fetch(`/research/status/${protocolCode}`, {
+            const response = await fetch(`{{ url('/research/status') }}/${protocolCode}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1352,7 +1352,7 @@
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const response = await fetch(`/research/status/${protocolCode}`, {
+            const response = await fetch(`{{ url('/research/status') }}/${protocolCode}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1440,8 +1440,8 @@
     }
 
     // Initialize the Tour
-    const isFirstLogin = @json(auth()->user()->is_first_login);
-    const userId = @json(auth()->id());
+    const isFirstLogin = @json($user->is_first_login);
+    const userId = @json($user->id);
     const storageKey = 'berc_tutorial_step_' + userId;
 
     // If they are no longer on their first login, wipe memory and abort

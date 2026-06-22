@@ -569,7 +569,7 @@
         </tr>
 
         <tr>
-            <td colspan="5" style="padding: 15px; height: 200px; vertical-align: top; text-align: justify; line-height: 1.5;">
+            <td colspan="5" style="padding: 15px; height: 200px; vertical-align: top; text-align: justify; line-height: 1; font-size:11pt">
                 {{ $application->brief_description ?? 'No description provided.' }}
             </td>
         </tr>
@@ -653,22 +653,24 @@
                 <td style="padding: 10px; border-left: none; border-top: none; vertical-align: top;">
                     <div class="checkbox-wrapper">
                         <span class="box" style="display: flex; justify-content: center; align-items: center; font-weight: bold;">
-                            {{ !empty($questionnaire) ? '✔' : '' }}
+                            {{ $questionnaire->isNotEmpty() ? '✔' : '' }}
                         </span>
                         <span class="cb-label">Questionnaire (if applicable)</span>
                     </div>
+
                     <div class="checkbox-wrapper">
                         <span class="box" style="display: flex; justify-content: center; align-items: center; font-weight: bold;">
-                            {{ !empty($dataCollection) ? '✔' : '' }}
+                            {{ $dataCollection->isNotEmpty() ? '✔' : '' }}
                         </span>
                         <span class="cb-label">Data Collection Forms (if applicable)</span>
                     </div>
-                        <div class="checkbox-wrapper">
-                            <span class="box" style="display: flex; justify-content: center; align-items: center; font-weight: bold;">
-                                {{ !empty($productBrochure) ? '✔' : '' }}
-                            </span>
-                            <span class="cb-label">Product Brochure (if applicable)</span>
-                        </div>
+
+                    <div class="checkbox-wrapper">
+                        <span class="box" style="display: flex; justify-content: center; align-items: center; font-weight: bold;">
+                            {{ $productBrochure->isNotEmpty() ? '✔' : '' }}
+                        </span>
+                        <span class="cb-label">Product Brochure (if applicable)</span>
+                    </div>
 
                         <div class="checkbox-wrapper">
                             <span class="box" style="display: flex; justify-content: center; align-items: center; font-weight: bold;">

@@ -1021,7 +1021,7 @@ function downloadAllDocs(btnElement) {
     btnElement.querySelector('.dl-spinner').classList.remove('hidden');
     btnElement.querySelector('.dl-text').innerText = 'Zipping...';
 
-    fetch(`/documents/api/download-zip/${protocolCode}`)
+    fetch(`{{ url('/documents/api/download-zip') }}/${protocolCode}`)
         .then(async response => {
             if (!response.ok) {
                 let errorMessage = 'Failed to generate ZIP.';
@@ -1050,8 +1050,8 @@ function downloadAllDocs(btnElement) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const isFirstLogin = @json(auth()->user()->is_first_login);
-    const userId = @json(auth()->id());
+    const isFirstLogin = @json($user->is_first_login);
+    const userId = @json($user->id);
     const storageKey = 'berc_tutorial_step_' + userId;
     const tourState = localStorage.getItem(storageKey);
 
@@ -1084,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.removeItem(storageKey);
 
                     // 2. Hit the database to permanently mark this user as no longer "first login"
-                    fetch('{{ route("tutorial.complete") }}', {
+                    fetch("{{ url('/complete-tutorial') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1112,7 +1112,7 @@ renderApplications();
 
 <script>
 function startHistoryTutorial({ manual = false } = {}) {
-    const userId = @json(auth()->id());
+    const userId = @json($user->id);
     const storageKey = 'berc_tutorial_step_' + userId;
 
     if (manual) {
@@ -1167,7 +1167,7 @@ function startHistoryTutorial({ manual = false } = {}) {
                 localStorage.removeItem(storageKey);
 
                 if (!manual) {
-                    fetch('{{ route("tutorial.complete") }}', {
+                    fetch("{{ url('/complete-tutorial') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1194,8 +1194,8 @@ function restartHistoryTutorial() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const isFirstLogin = @json(auth()->user()->is_first_login);
-    const userId = @json(auth()->id());
+    const isFirstLogin = @json($user->is_first_login);
+    const userId = @json($user->id);
     const storageKey = 'berc_tutorial_step_' + userId;
     const tourState = localStorage.getItem(storageKey);
 

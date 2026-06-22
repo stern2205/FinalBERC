@@ -260,8 +260,8 @@
                                                 </div>
                                             </td>
 
-                                            <td class="px-4 py-5 border-l border-gray-200">
-                                                <div class="text-[10px] text-gray-700 leading-relaxed" x-html="row.reviewers_remarks"></div>
+                                            <td class="px-4 py-5 border-l border-gray-200 align-top bg-white">
+                                                <div class="text-xs text-gray-800 leading-relaxed whitespace-pre-wrap" x-html="row.reviewers_remarks"></div>
                                             </td>
 
                                             <td class="px-4 py-5 border-l border-gray-200">
@@ -557,7 +557,7 @@ document.addEventListener('alpine:init', () => {
             const revNum = protocol.version.replace('V', '');
 
             try {
-                const draftRes = await fetch(`/api/secretariat/resubmission/${protocol.id}/v${revNum}/draft`);
+                const draftRes = await fetch(`{{ url('/api/secretariat/resubmission') }}/${protocol.id}/v${revNum}/draft`);
                 if (draftRes.ok) {
                     const draftData = await draftRes.json();
 
@@ -590,7 +590,7 @@ document.addEventListener('alpine:init', () => {
             this.loadedDocs = { activeBasic: [], activeSupp: [], legacy: [] };
 
             try {
-                const docResponse = await fetch(`/documents/api/revision/${protocol.id}/${revNum}`);
+                const docResponse = await fetch(`{{ url('/documents/api/revision') }}/${protocol.id}/${revNum}`);
                 if (docResponse.ok) {
                     const data = await docResponse.json();
                     let tempDocs = { activeBasic: [], activeSupp: [], legacy: [] };
@@ -688,7 +688,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch(`/api/secretariat/resubmission/${protocolId}/v${revNum}/draft`, {
+                const response = await fetch(`{{ url('/api/secretariat/resubmission') }}/${protocolId}/v${revNum}/draft`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -802,7 +802,7 @@ document.addEventListener('alpine:init', () => {
             };
 
             try {
-                const response = await fetch('/api/secretariat/resubmission/synthesis/save', {
+                const response = await fetch('{{ url("/api/secretariat/resubmission/synthesis/save") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -865,8 +865,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function runRevisionFormsTutorial(manual = false, retries = 0) {
-        const isFirstLogin = @json(auth()->check() ? auth()->user()->is_first_login : true);
-        const userId = @json(auth()->id() ?? 1);
+        const isFirstLogin = @json($user->is_first_login);
+        const userId = @json($user->id);
         const storageKey = 'berc_tutorial_step_' + userId;
 
         const urlParams = new URLSearchParams(window.location.search);
